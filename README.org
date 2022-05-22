@@ -1,7 +1,10 @@
 #+TITLE: README channel-manager
 #+OPTIONS: author:nil timestamp:nil num:nil
 #+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
+* Funzionamento generale del bot
+Il bot funziona principalmente grazie ad Altervista, il sito sul quale è hostato e "gira" questo codice. Per usare alcune funzioni (la programmazione dell'orario di invio dei post) è però necessario appoggiarsi ad un sito esterno (easycron.com) che a sua volta deve appoggiarsi ad una app Heroku che reindirizza le richieste a questa (Altervista è nella blacklist del sito easycron.com, non è quindi possibile inviare richieste dirette alla pagina).
 
+@TODO Settare awake in automatico in init.php
 * Prassi di sicurezza
 Prima di effettuare qualsiasi configurazione è opportuno "mettere in sicurezza" il Bot. Per fare questo è sufficente cambiare il nome della cartella che lo contiene (originariamente sarà "BotN" dove N è un numero) cliccando su /Rinomina/ ed incollare il token del Bot fornito da Telegram. *Prima di confermare è importante sostituire i ":" se sono presenti nel codice*, Altervista non li accetta come carattere valido per il nome di una cartella (possono essere sotituiti con un carattere a caso oppure direttamente cancellati, non fa differenza).
 
