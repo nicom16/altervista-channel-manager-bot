@@ -1,0 +1,83 @@
+#+TITLE: README channel-manager
+#+OPTIONS: author:nil timestamp:nil num:nil
+#+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
+
+* Prassi di sicurezza
+Prima di effettuare qualsiasi configurazione è opportuno "mettere in sicurezza" il Bot. Per fare questo è sufficente cambiare il nome della cartella che lo contiene (originariamente sarà "BotN" dove N è un numero) cliccando su /Rinomina/ ed incollare il token del Bot fornito da Telegram. *Prima di confermare è importante sostituire i ":" se sono presenti nel codice*, Altervista non li accetta come carattere valido per il nome di una cartella (possono essere sotituiti con un carattere a caso oppure direttamente cancellati, non fa differenza).
+
+Questa operazione renderà l'indirizzo di accesso al Bot irraggiungibile per qualsiasi malintenzionato che non conosce il tuo token, visto che l'url per comunicare con il Bot contiene anche il nome della cartella con i file che lo costituiscono. Per sapere di più sul token del Bot e su come ottenerlo leggere l'apposita sezione (~$botToken~).
+
+* Configurazione variabili
+Per far funzionare il Bot è necessario fornirgli dei valori prima di poterlo utilizzare, questi valori vanno inseriti manualmente (copia-incolla o digitazione) all'interno del file ~config.php~ che si trova nella cartella principale del Bot, la stessa di questo file.
+
+Per aprire il file bisogna spostarsi sopra al suo nome con il cursore, a questo punto si vedranno apparire delle opzioni sotto: premendo su /Modifica/ si aprirà uno spazio in cui si può andare a scrivere all'interno del file.
+
+L'unica operazione da fare è riempire i campi vuoti alla destra dell'uguale con i valori necessari: il testo va inserito fra le virgolette, facendo attenzione a non cancellarle!
+
+Ecco un esempio di come dovrebbe essere una riga corretamente inserita:
+
+~$valore = "il mio valore";~
+
+Di seguito una sintesi dei valori da inserire con breve spiegazione di dove trovarli ed a cosa servono. Nella lista sono presenti anche valori che troverai già inseriti, quelli ovviamente non vanno modificati.
+
+** ~$DBUsername~
+L'username per accedere al database, è lo stesso del tuo account Altervista.
+
+** ~$table~
+Il nome che vuoi dare alla tabella del database che conterrà tutti gli elementi che poi saranno inviati sul canale.
+
+*IMPORTANTE!* In questo campo si trovano le virgolette singole ('testo') anziché le doppie ("testo") per motivi tecnici, il comportamento nell'inserimento della variabile però non cambia.
+
+** ~$botToken~
+Un codice alfanumerico che viene fornito da telegram al momento della creazione del Bot
+nella chat con [[https://t.me/BotFather][@BotFather]].
+
+*IMPORTANTE!* Non fornire *mai* a nessuno questo codice, chiunque lo abbia può controllare il tuo Bot e fare danni irreparabili!
+
+** ~$cron_token~
+Un codice alfanumerico simile a quello di Telegram, ma che serve per interfacciarsi con il sito [[https://easycron.com][EasyCron]].
+
+** ~$user_id~
+Il tuo id utente di Telegram, serve per permettere al Bot di inviarti dei messaggi in determinate situazioni e per limitare l'utilizzo del Bot solamente a te. Per ottenere questo codice inoltra un tuo messaggio a [[https://t.me/getidsbot][@getidsbot]].
+
+** ~$channel~
+L'id del tuo canale a cui verranno inviati i post, per ottenerlo usa lo stesso Bot di sopra.
+
+*IMPORTANTE!* Per far funzionare l'invio ricordati anche di aggiungere il Bot al canale e di dargli i permessi da amministratore.
+
+** ~$caption~
+La didascalia che vuoi venga mostrata sotto ogni elemento inviato dal Bot.
+
+** ~$bot~
+Un nome che identifichi il Bot, possibilmente corto (ad esempio un acronimo), in ogni caso *deve essere costituito da una sola parola*, quindi niente spazi.
+
+** ~$heroku_link~
+Il link della tua app su Heroku, lo puoi trovare nella pagina dell'app in /Settings > Domains/.
+
+* Inizializzazione
+Per inizializzare il Bot è sufficente aprire (cliccando sopra /Apri/ o direttamente sul nome del file) ~init.php~, se tutto è stato inizializzato correttamente dovrebbero apparire sulla pagina del browser delle porzioni di testo separate da // che indicano la riuscita delle operazioni.
+
+* Comandi e funzionamento
+Ecco un elenco dei comandi disponibili e di come usarli.
+
+** Inserimento nel database
+Per inserire un video, una gif o un'immagine nel database basta inviarla (direttamente o per messggio inoltrato) alla chat con il Bot. Se l'elemento è già stato inserito precedentemente il Bot risponderà informando che è già presente nel database.
+
+** Invio di un elemento a caso sul canale
+Premere il tasto /Invia/ della tastiera.
+
+** Conta elementi presenti nel database
+Premere il tasto /Conta elementi/ della tastiera.
+
+** Eliminare un elemento dal database
+Rispondere al messaggio contenente l'elemento scrivendo "Elimina" o "elimina".
+
+*Nota!* Se si è a conoscenza della presenza di un elemento che si vuole eliminare, ma è molto indietro nella chat, si può reinviare (tanto non sarà inserito, visto che è già presente) in modo da avere il messaggio a portata di mano per poter rispondere.
+
+** Flaggare (=dare priorità) un elemento
+Uguale all'eliminazione, ma con "Flag" o "flag". Per togliere la priorità usare "Unflag" o "unflag".
+
+Gli elementi flaggati verranno inviati, sempre in ordine casuale fra loro, prima di tutti gli altri.
+
+** Programmazione orario
+Per programmare un orario schiacciare sul tasto /Programma orario/, si riceverà un messaggio in cui si vedono tutti gli orario giornalieri già aggiunti ed un pulsante per aggiungerne uno nuovo. Cliccando su un orario già presente lo si andrà ad eliminare, mentre schiacciando sull'altro bottone si riceverà un messaggio: a questo punto si potrà inviare un messaggio al Bot scrivendo l'orario da aggiungere *nel formato hmm o hhmm* (quindi 9:45 = 945, 10:50 = 1050). Si può anche specificare un eventuale invio multiplo usando "=N" (dove N è il numero di post da inviare) dopo l'orario (quindi se voglio inviare 3 post alle 9:45 scriverò 945=3).
