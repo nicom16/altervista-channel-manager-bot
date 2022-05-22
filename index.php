@@ -1,6 +1,6 @@
 <?php
 
-// Librerie
+// Imports
 foreach (glob('./lib/*.php') as $fun) {
 	include_once $fun;
 }
@@ -9,19 +9,20 @@ foreach (glob('./fun/*.php') as $fun) {
 }
 include_once 'config.php';
 
-// Variabili generali
+// General variables
 $website = "https://api.telegram.org/bot".$botToken;
 $update = file_get_contents('php://input');
 $update = json_decode($update, TRUE);
 $scheduling = file_get_contents("./scheduling.txt");
+$stopRequests = file_get_contents("./stop.txt");
 
-// Variabili callback query
+// Callback query
 $cb_call = $update['callback_query']['data'];
 $cb_id = $update['callback_query']['from']['id'];
 $cb_mess = $update['callback_query']['message']['message_id'];
 $query_id = $update['callback_query']['id'];
 
-// Variabili messaggio in arrivo
+// Incoming message variables
 $message = $update['message']['text'];
 $chatID = $update['message']['from']['id'];
 $telegramUsername = $update['message']['from']['username'];
@@ -34,8 +35,17 @@ $vidID = $update['message']['video']['file_id'];
 $quote = $update['message']['reply_to_message'];
 $chat_join_request_id = $update['chat_join_request']['from']['id'];
 
-// Connessione al Database
+// Db connection
 $conn = mysqli_connect($DBServerName, $DBUsername, null, $DBName);
+
+// Keyboard
+$keys = '["Invia"],["Conta elementi"],["Programma orario"],["Disattiva richieste"]';
+if (!empty($stopRequests)) {
+    $keys = '["Invia"],["Conta elementi"],["Programma orario"],["Attiva richieste"]';
+}
+
+$keysDisattiva = '["Invia"],["Conta elementi"],["Programma orario"],["Disattiva richieste"]';
+$keysAttiva = '["Invia"],["Conta elementi"],["Programma orario"],["Attiva richieste"]';
 
 // Main
 if (!empty($cb_call)) {
@@ -64,7 +74,8 @@ if (!empty($cb_call)) {
     }
 
     return "Sended!";
-} elseif (!empty($chat_join_request_id)) {
+} elseif (!empty($chat_join_request_id) && empty($stopRequests)) {
+    // Automatically decline arabic accounts' join requests
     $is_arabic = preg_match('/\p{Arabic}/u', $update['chat_join_request']['from']['first_name']);
     $is_arabic2 = preg_match('/\p{Arabic}/u', $update['chat_join_request']['from']['last_name']);
     
@@ -87,7 +98,7 @@ if (!empty($cb_call)) {
     } else {
 		switch ($message) {
         	case "/start":
-                keyboard('["Invia"],["Conta elementi"],["Programma orario"]', "Ciao", $chatID);
+                keyboard($keys, "Ciao", $chatID);
                 break;
 			case "Invia":
 				sendToChannel($chatID, $channel, $caption);
@@ -110,8 +121,16 @@ if (!empty($cb_call)) {
             case "Programma orario":
                 listCron($bot, $chatID);
                 break;
+            case "Attiva richieste":
+                unlink("./stop.txt");
+                keyboard($keysDisattiva, "L'accettazione automatica delle richieste è stata attivata.", $chatID);
+                break;
+            case "Disattiva richieste":
+                file_put_contents("./stop.txt", "Stop it!");
+                keyboard($keysAttiva, "L'accettazione automatica delle richieste è stata disattivata.", $chatID);
+                break;
             default:
-                keyboard('["Invia"],["Conta elementi"],["Programma orario"]', "Il comando inserito non è supportato!", $chatID);
+                keyboard($keys, "Il comando inserito non è supportato!", $chatID);
 				break;	
 		} 		
 	}
