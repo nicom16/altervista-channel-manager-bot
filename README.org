@@ -1,6 +1,8 @@
 #+TITLE: README channel-manager
 #+OPTIONS: author:nil timestamp:nil num:nil
 #+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
+* IMPORTANT! The present code has been developed in a span of months! During this time, my coding skills and awareness have improved a lot, but due to time constraints I wasn't able to fix minor "errors" (ex: naming convenventions inconsistencies). Anyway, the code as a whole is working.
+
 * Funzionamento generale del bot
 Il bot funziona principalmente grazie ad Altervista, il sito sul quale è hostato e "gira" questo codice. Per usare alcune funzioni (la programmazione dell'orario di invio dei post) è però necessario appoggiarsi ad un sito esterno (easycron.com) che a sua volta deve appoggiarsi ad una app Heroku che reindirizza le richieste a questa (Altervista è nella blacklist del sito easycron.com, non è quindi possibile inviare richieste dirette alla pagina).
 
